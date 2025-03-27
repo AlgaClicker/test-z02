@@ -37,10 +37,9 @@ class AccountService implements AccountServiceContract
         $user = $this->usersRepository->getUserByEmail($email);
 
 
+
         if (! $user || ! Hash::check($password, $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
-            ]);
+            abort('404',"Не найденно");
         }
         $token = $user->createToken($email)->plainTextToken;
 

@@ -22,15 +22,17 @@ class UsersRepository extends AbstractRepository implements UsersRepositoryContr
      public function create(string $email,string $password, ?string $fullName=null): Account
      {
 
-
          $this->model = User::create([
-            'name'=>$fullName,
+            'name'=>$fullName ?? "",
             'email'=>$email,
             'password'=>$password
-        ]);
-         $this->model->save();
+         ]);
 
-     return new Account($email,$fullName,$this->user->id);
+         $this->model->save();
+         $account =  $this->resultEntity();
+         $account->setFullName($this->model->name ?? "");
+
+         return $account;
      }
 
 
@@ -50,24 +52,14 @@ class UsersRepository extends AbstractRepository implements UsersRepositoryContr
     {
 
         $this->model = User::find($id);
-        
+
         $account =  $this->resultEntity();
         $account->setFullName($this->model->name) ;
-
-
         return $account;
     }
     public function getUserByEmail(string $email)
     {
         return User::where('email',$email)->first();
-    }
-    public function registerNewAccount(string $email,string $password, ?string $fullName=null): ?Account
-    {
-
-    }
-    public function getAccountById(string $id): ?Account
-    {
-
     }
 
 
