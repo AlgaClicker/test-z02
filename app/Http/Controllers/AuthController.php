@@ -26,6 +26,18 @@ class AuthController extends Controller
     function authRegister(Request $request)
     {
 
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+            'password_confirm' => 'required',
+        ]);
+
+
+        return $this->sendJson($this->accountService->register(
+            $request->get('email'),
+            $request->get('password'),
+            $request->get('fullName')
+        ));
     }
 
     public function authLogin(Request $request)
@@ -44,6 +56,6 @@ class AuthController extends Controller
 
     public function authGetMe()
     {
-
+        return $this->sendJson($this->accountService->getMe());
     }
 }

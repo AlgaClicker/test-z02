@@ -16,9 +16,3 @@ Route::inertia('/about', 'About');
 
 
 
-Route::prefix('auth')->group(function () {
-    Route::post('/register', [AuthController::class, 'authRegister']);
-    Route::get('/login', [AuthController::class, 'authLogin'])->name('login');
-
-    Route::get('/me', [AuthController::class, 'authGetMe'])->middleware(['auth:sanctum']);
-});

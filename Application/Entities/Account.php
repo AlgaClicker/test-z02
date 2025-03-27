@@ -19,19 +19,23 @@ class Account
      * @var string ФИО аккаунта
      */
     private string $fullName;
+    /**
+     * @var string Токен аккаунта
+     */
+    private string $token;
 
     /**
      * Account constructor.
      *
      * @param string $email
-     * @param string $fullName
+     * @param string|null $fullName
      * @param string|null $id Если не передано, генерируется новый UUID
      */
-    public function __construct(string $email, ?string $fullName = null, ?string $id = null)
+    public function __construct(?string $email=null, ?string $fullName = null, ?string $id = null)
     {
         $this->id = $id ?? Uuid::uuid4()->toString();
-        $this->email = $email;
-        $this->fullName = $fullName ?? null;
+        $this->email = $email?? "";
+        $this->fullName = $fullName ?? "";
     }
 
     /**
@@ -42,6 +46,10 @@ class Account
     public function getId(): string
     {
         return $this->id;
+    }
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     /**
@@ -84,5 +92,26 @@ class Account
     public function setFullName(string $fullName): void
     {
         $this->fullName = $fullName;
+    }
+
+    /**
+     * Получить  Токен аккаунта.
+     *
+     * @return string
+     */
+    public function getToken(): string
+    {
+        return $this->token;
+    }
+
+    /**
+     * Установить Токен аккаунта.
+     *
+     * @param string $token
+     * @return void
+     */
+    public function setToken(string $token): void
+    {
+        $this->token = $token;
     }
 }
