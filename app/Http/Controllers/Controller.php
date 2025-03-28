@@ -12,12 +12,12 @@ abstract class Controller
 
 
     //
-    public function sendJson(?Object $entity=null)
+    public function sendJson($objOrArr)
     {
-      if (!$entity) return "null";
-
+      if (!$objOrArr) return "null";
+        dd("sendJson",$objOrArr);
         $serializer = SerializerBuilder::create()->build();
-        $resultArray =  json_decode($serializer->serialize($entity,'json'));
+        $resultArray =  json_decode($serializer->serialize($objOrArr,'json'));
 
 
         return JsonResponseDefault::create(

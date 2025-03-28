@@ -13,7 +13,6 @@ abstract class AbstractRepository
     private $model ;
     protected string $entity;
 
-
     public function setModel($model)
     {
         $this->model = $model;
@@ -50,6 +49,24 @@ abstract class AbstractRepository
 
     }
 
+    public function findAllBy(array $arrKeyAttrib): ?array
+    {
+        $arrKeyAttrib = $this->checkAttr($arrKeyAttrib);
+        $model = $this->model;
+        foreach ($arrKeyAttrib as $key=>$val) {
+            $model->where($key,"=",$val);
+        }
+        $listEntity = [];
+
+
+        foreach ($model->get()->all() as $key => $objModel) {
+            //dd($objModel,$this->resultEntity($objModel));
+            $listEntity[] = $this->resultEntity($objModel);
+
+        }
+
+        return $listEntity;
+    }
     public function findBy(array $arrKeyAttrib)
     {
 
@@ -103,16 +120,11 @@ abstract class AbstractRepository
         }
 
         if (is_object($model) && get_class($model) != 'stdClass') {
-
-
             if (method_exists($model,'getAttributes')) {
                 $attributes = $model->getAttributes();
-
-
             } else {
                 $attributes = $model;
             }
-
 
             foreach ($attributes as $attr=>$val ) {
                 if (property_exists($entity,$attr)) {

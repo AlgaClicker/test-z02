@@ -30,6 +30,6 @@ class CounteragentController extends Controller
      }
 
     public function list(Request $request) {
-        return "CounteragentController@llist";
+        return $this->sendJson($this->counteragentService->getMyCounteragents());
     }
 }

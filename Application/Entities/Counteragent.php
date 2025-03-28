@@ -117,5 +117,16 @@ class Counteragent {
     {
         $this->address = $address;
     }
+
+    /**
+     * Установить ID контрагента.s
+     *
+     * @param string $ogrn
+     * @return void
+     */
+    public function setId(string $id): void
+    {
+        $this->id = $id;
+    }
 }
 

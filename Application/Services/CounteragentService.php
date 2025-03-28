@@ -4,7 +4,7 @@ namespace Application\Services;
 
 use Application\Contracts\Repositories\CounteragentRepositoryContract;
 use Application\Contracts\Services\CounteragentServiceContract;
-use Infrastructure\Repositories\CounteragentRepository;
+use Application\Contracts\Services\AccountServiceContract;
 use MoveMoveIo\DaData\Facades\DaDataCompany;
 use MoveMoveIo\DaData\Enums\BranchType;
 use MoveMoveIo\DaData\Enums\CompanyType;
@@ -12,10 +12,14 @@ use MoveMoveIo\DaData\Enums\CompanyType;
 class CounteragentService implements  CounteragentServiceContract
 {
 
-    protected CounteragentRepositoryContract $counteragentRepository;
-    public function __construct(CounteragentRepositoryContract $counteragentRepository)
-    {
+    private CounteragentRepositoryContract $counteragentRepository;
+    private AccountServiceContract $accountService;
+    public function __construct(
+        CounteragentRepositoryContract $counteragentRepository,
+        AccountServiceContract $accountService
+    ){
         $this->counteragentRepository = $counteragentRepository;
+        $this->accountService = $accountService;
     }
 
     public function createFromInn($inn)
@@ -29,7 +33,7 @@ class CounteragentService implements  CounteragentServiceContract
 
         if ($dadata['suggestions']===[]) {
             abort(400,"ИНН не найден");
-            
+
         }
         $dadata = $dadata['suggestions'][0]['data'];
         $data = [
@@ -49,6 +53,12 @@ class CounteragentService implements  CounteragentServiceContract
     public function getCounteragentById($id)
     {
         return $this->counteragentRepository->findById($id);
+    }
+
+
+    public function getMyCounteragents()
+    {
+        return $this->counteragentRepository->getAccountCounteragents($this->accountService->getMe());
     }
 
 }

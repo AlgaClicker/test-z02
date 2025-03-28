@@ -67,7 +67,7 @@ class AccountService implements AccountServiceContract
     }
 
 
-    public function getMe()
+    public function getMe() : ?Account
     {
         $user = auth()->user();
 

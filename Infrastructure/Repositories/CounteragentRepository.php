@@ -2,6 +2,7 @@
 namespace Infrastructure\Repositories;
 use Application\Contracts\Repositories\CounteragentRepositoryContract;
 use App\Models\Counteragent as CounteragentModel;
+use Application\Entities\Account;
 use Application\Entities\Counteragent;
 
 final class CounteragentRepository extends AbstractRepository implements  CounteragentRepositoryContract{
@@ -10,19 +11,16 @@ final class CounteragentRepository extends AbstractRepository implements  Counte
 
     public function __construct(CounteragentModel $counteragent)
     {
-
-
         $this->setModel($counteragent);
-
         $this->entity = Counteragent::class;
     }
 
 
-    public function findBy($arrayKeyVal)
+    public function getAccountCounteragents(Account $account): array | null
     {
-
-        return parent::findBy($arrayKeyVal);
+        return parent::findAllBy(['user_id'=>$account->getId()]);
     }
+
 
 
 
