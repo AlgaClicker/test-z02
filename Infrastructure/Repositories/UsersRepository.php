@@ -6,35 +6,23 @@ use App\Models\User;
 use Application\Contracts\Repositories\UsersRepositoryContract;
 use Illuminate\Database\Eloquent\Model;
 use Application\Entities\Account;
+use Illuminate\Support\Facades\Hash;
+
 class UsersRepository extends AbstractRepository implements UsersRepositoryContract{
 
-     protected User $user;
-     protected $entity;
+    protected User $user;
      public function __construct(User $user)
      {
-
-         $this->user = $user;
-         $this->model = $user;
          $this->entity = Account::class;
-
+         $this->setModel($user) ;
+         $this->user = $user;
      }
 
-     public function create(string $email,string $password, ?string $fullName=null): Account
-     {
-
-         $this->model = User::create([
-            'name'=>$fullName ?? "",
-            'email'=>$email,
-            'password'=>$password
-         ]);
-
-         $this->model->save();
-         $account =  $this->resultEntity();
-         $account->setFullName($this->model->name ?? "");
-
-         return $account;
-     }
-
+    public function create(array $arrayKeyVal): ?Account
+    {
+        $result = parent::create($arrayKeyVal);
+        return $this->setName($result);
+    }
 
     public function getByEmail(string $email): ?Account {
 
@@ -42,8 +30,7 @@ class UsersRepository extends AbstractRepository implements UsersRepositoryContr
 
         if ($this->model) {
             $account = $this->resultEntity($this->model);
-            $account->setFullName($this->model->name ?? "");
-            return  $account;
+            return $this->setName($account);
         }
         return null;
     }
@@ -51,15 +38,34 @@ class UsersRepository extends AbstractRepository implements UsersRepositoryContr
     public function getById(string $id): ?Account
     {
 
-        $this->model = User::find($id);
+        $this->model = $this->findById($id);
 
-        $account =  $this->resultEntity();
-        $account->setFullName($this->model->name) ;
-        return $account;
+        $account =  $this->resultEntity($this->model);
+
+        return $this->setName($account);
     }
-    public function getUserByEmail(string $email)
+    public function getUserByEmail(string $email): ?Account
     {
-        return User::where('email',$email)->first();
+        $account = parent::findBy(["email"=>$email]);
+        return $this->setName($account);
+    }
+
+    public function checkPassword(Account $account, string $password): ?User
+    {
+        $this->setModel($this->user);
+        $user = $this->findById($account->getId());
+        if (! $user || ! Hash::check($password, $user->password)) {
+            return null;
+        }
+        return $user;
+    }
+
+    public function setName(Account $account): ?Account
+    {
+        $this->setModel($this->user);
+        $user = $this->findById($account->getId());
+        $account->setFullName($user->name);
+        return $account;
     }
 
 

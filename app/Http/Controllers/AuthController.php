@@ -33,11 +33,7 @@ class AuthController extends Controller
         ]);
 
 
-        return $this->sendJson($this->accountService->register(
-            $request->get('email'),
-            $request->get('password'),
-            $request->get('fullName')
-        ));
+        return $this->sendJson($this->accountService->register($request->all()));
     }
 
     public function authLogin(Request $request)

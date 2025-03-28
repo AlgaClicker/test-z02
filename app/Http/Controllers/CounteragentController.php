@@ -15,13 +15,21 @@ class CounteragentController extends Controller
         $this->counteragentService = $counteragentService;
     }
 
-    public function index(Request $request)
+
+    public function create(Request $request)
     {
-       $val =  $request->validate([
+       $request->validate([
             'inn' => 'required|digits:10',
         ]);
+        return $this->sendJson($this->counteragentService->createFromInn($request->get('inn')));
+    }
 
+     public function get($id)
+     {
+         return $this->sendJson($this->counteragentService->getCounteragentById($id));
+     }
 
-        return $this->sendJson($this->counteragentService->getInnDaData($request->get('inn')));
+    public function list(Request $request) {
+        return "CounteragentController@llist";
     }
 }

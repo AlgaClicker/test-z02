@@ -3,24 +3,27 @@ namespace Application\Entities;
 use Ramsey\Uuid\Uuid;
 
 class Counteragent {
+
+    private string $id;
+    private int $inn;
+    private string $name;
+    private string $ogrn;
+    private string $address;
+
     public function __construct(
-        ?string $inn = null,
+        ?int $inn = null,
         ?string $name = null,
         ?string $address = null,
         ?string $id = null,
         ?string $ogrn = null,
     ){
         $this->id = $id ?? Uuid::uuid4()->toString();
-        $this->inn = $inn ?? null;
-        $this->name = $name ?? null;
-        $this->ogrn = $ogrn ?? null;
-        $this->address = $address ?? null;
+        $this->inn = $inn ?? 0;
+        $this->name = $name ?? "";
+        $this->ogrn = $ogrn ?? "";
+        $this->address = $address ?? "";
     }
-    private string $id;
-    private string $inn;
-    private string $name;
-    private string $ogrn;
-    private string $address;
+
 
     /**
      * Получить UUID идентификатор контрагента.
@@ -92,6 +95,16 @@ class Counteragent {
     public function setOgrn(string $ogrn): void
     {
         $this->ogrn = $ogrn;
+    }
+    /**
+     * Установить ИНН контрагента.
+     *
+     * @param string $ogrn
+     * @return void
+     */
+    public function setInn(string $inn): void
+    {
+        $this->inn = $inn;
     }
 
     /**
