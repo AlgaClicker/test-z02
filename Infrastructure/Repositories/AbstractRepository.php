@@ -36,13 +36,13 @@ abstract class AbstractRepository
     public function create(array $arrayKeyVal) {
 
         $arrayKeyVal = $this->checkAttr($arrayKeyVal);
-
         try {
             $model =  $this->model->create($arrayKeyVal);
 
 
             return $this->resultEntity( $model);
         } catch ( \Exception $e ) {
+            return null;
             dd("create Exception",$e);
             //abort('500', $e->getMessage());
         }
@@ -87,10 +87,9 @@ abstract class AbstractRepository
             $user->where($key,"=",$attribute);
             $lis[$key] = $attribute;
         }
-
-        if ($user->first()) {
-            $this->setModel($user->first());
-            return $this->resultEntity($user->first());
+        $user = $user->first();
+        if ($user) {
+            return $this->resultEntity($user);
         }
 
         return null;
@@ -100,8 +99,10 @@ abstract class AbstractRepository
 
     public function findById($id)
     {
-        $this->model = $this->model->find($id);
-        return  $this->model;
+        $model = $this->model->find($id);
+
+
+        return  $this->resultEntity($model);
     }
 
     public function resultEntity($model) {
@@ -110,6 +111,7 @@ abstract class AbstractRepository
         if (is_object($model) && get_class($model) == 'stdClass') {
             $arrKeyVal = get_object_vars($model);
             foreach ($arrKeyVal as $attr=>$value) {
+
                 if (property_exists($entity,$attr)) {
                     $nameSetMethod = "set".ucfirst($attr);
                     if (method_exists($entity,$nameSetMethod)) {
@@ -135,6 +137,7 @@ abstract class AbstractRepository
                 }
             }
         }
+
 
         return  $entity;
     }

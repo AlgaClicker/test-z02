@@ -19,13 +19,15 @@ class CounteragentController extends Controller
     public function create(Request $request)
     {
        $request->validate([
-            'inn' => 'required|digits:10',
+            'inn' => 'required|digits_between:10,13',
         ]);
+
         return $this->sendJson($this->counteragentService->createFromInn($request->get('inn')));
     }
 
      public function get($id)
      {
+
          return $this->sendJson($this->counteragentService->getCounteragentById($id));
      }
 

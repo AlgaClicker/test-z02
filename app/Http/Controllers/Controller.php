@@ -15,7 +15,7 @@ abstract class Controller
     public function sendJson($objOrArr)
     {
       if (!$objOrArr) return "null";
-        dd("sendJson",$objOrArr);
+        //dd("sendJson",$objOrArr);
         $serializer = SerializerBuilder::create()->build();
         $resultArray =  json_decode($serializer->serialize($objOrArr,'json'));
 

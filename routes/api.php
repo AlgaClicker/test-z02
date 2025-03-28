@@ -25,7 +25,8 @@ Route::post('/login', [AuthController::class, 'authLogin'])->name('login');
 // Группируем маршруты, требующие авторизации
 Route::middleware('auth:sanctum')->group(callback: function () {
     Route::post('counteragent/add/inn', [CounteragentController::class, 'create']);
-    Route::get('counteragent/{id}', [CounteragentController::class, 'get']);
+    Route::get('counteragent/{id}/', [CounteragentController::class, 'get']);
+
     Route::get('counteragents', [CounteragentController::class, 'list']);
 
     Route::get('/me', [AuthController::class, 'authGetMe']);

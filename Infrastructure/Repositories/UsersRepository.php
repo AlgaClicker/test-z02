@@ -21,6 +21,7 @@ class UsersRepository extends AbstractRepository implements UsersRepositoryContr
     public function create(array $arrayKeyVal): ?Account
     {
         $result = parent::create($arrayKeyVal);
+        if (!$result) return null;
         return $this->setName($result);
     }
 
@@ -30,6 +31,8 @@ class UsersRepository extends AbstractRepository implements UsersRepositoryContr
 
         if ($this->model) {
             $account = $this->resultEntity($this->model);
+
+            if (!$account->getEmail()) return null;
             return $this->setName($account);
         }
         return null;
@@ -47,6 +50,7 @@ class UsersRepository extends AbstractRepository implements UsersRepositoryContr
     public function getUserByEmail(string $email): ?Account
     {
         $account = parent::findBy(["email"=>$email]);
+        if (!$account) return null;
         return $this->setName($account);
     }
 
@@ -60,11 +64,13 @@ class UsersRepository extends AbstractRepository implements UsersRepositoryContr
         return $user;
     }
 
-    public function setName(Account $account): ?Account
+    public function setName(Account $account): Account
     {
+
         $this->setModel($this->user);
         $user = $this->findById($account->getId());
-        $account->setFullName($user->name);
+
+        $account->setFullName($user->name ?? "");
         return $account;
     }
 
