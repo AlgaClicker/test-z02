@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\CounteragentController;
 use App\Http\Controllers\AuthController;
@@ -18,12 +19,39 @@ Route::post('/register', [AuthController::class, 'authRegister'])->name('registe
 
 
 Route::post('/login', [AuthController::class, 'authLogin'])->name('login');
-Route::get('/me', [AuthController::class, 'authGetMe'])->middleware(['auth:sanctum']);
 
 
 
 // Группируем маршруты, требующие авторизации
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('counteragents', [CounteragentController::class, 'store']);
-    Route::get('counteragents', [CounteragentController::class, 'index']);
+Route::middleware('auth:sanctum')->group(callback: function () {
+    Route::post('counteragent/add/inn', [CounteragentController::class, 'create']);
+    Route::get('counteragent/{id}/', [CounteragentController::class, 'get']);
+
+    Route::get('counteragents', [CounteragentController::class, 'list']);
+
+    Route::get('/me', [AuthController::class, 'authGetMe']);
+
+    Route::get('/routes', function (){
+
+        $routes = app('router')->getRoutes()->getRoutes();
+        $listRoutes = [];
+        foreach ($routes as $route) {
+            foreach ($route->methods() as $method) {
+                if (array_key_exists('controller',$route->action) && $route->action['controller']) {
+
+                    if ($method == "HEAD") {continue;}
+
+                    $listRoutes[] = [
+                        "method"=>$method,
+                        "url"=>URL::to($route->uri),
+                        "controller"=>$route->action['controller'],
+                        "middleware"=>$route->action['middleware']
+                    ];
+                }
+            }
+        }
+
+        return $listRoutes;
+    });
+
 });

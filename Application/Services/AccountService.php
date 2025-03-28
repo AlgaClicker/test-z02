@@ -34,37 +34,40 @@ class AccountService implements AccountServiceContract
     public function login(string $email, string $password): ? Account
     {
 
-        $user = $this->usersRepository->getUserByEmail($email);
+        $account = $this->usersRepository->getUserByEmail($email);
+        if (!$account) {
+            abort("400","Авторизация не пройдена");
+        }
 
 
-        if (! $user || ! Hash::check($password, $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
-            ]);
+        $user = $this->usersRepository->checkPassword($account, $password);
+        if (!$user) {
+            abort("400","Авторизация не пройдена");
         }
         $token = $user->createToken($email)->plainTextToken;
 
-        $account = $this->getAccountFromEmail($email);
         $account->setToken($token);
         return $account;
     }
 
 
-    public function register(string $email,string $password, ?string $fullName = null): ? Account
+    public function register(array $arrayKeyVal): ? Account
     {
 
 
-        if ($this->getAccountFromEmail($email) !== null) {
+        if ($this->getAccountFromEmail($arrayKeyVal['email']) !== null) {
             abort(400,'*** Ошибка регистрации пользователя ***');
         }
-
-        $password = Hash::make($password);
-        return $this->usersRepository->create($email,$password,$fullName);
+        if (array_key_exists('fullName',$arrayKeyVal)) {
+            $arrayKeyVal['name'] = $arrayKeyVal['fullName'];
+        }
+        $arrayKeyVal['password'] = Hash::make($arrayKeyVal['password']);
+        return $this->usersRepository->create($arrayKeyVal);
 
     }
 
 
-    public function getMe()
+    public function getMe() : ?Account
     {
         $user = auth()->user();
 

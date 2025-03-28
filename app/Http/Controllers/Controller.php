@@ -3,15 +3,30 @@
 namespace App\Http\Controllers;
 
 use PhpParser\Node\Expr\Cast\Object_;
-
+use App\Http\Response\JsonResponseDefault;
+use JMS\Serializer\SerializerBuilder;
+use Illuminate\Support\Facades\Response;
 abstract class Controller
 {
-    //
-    public function sendJson(?Object $entity=null)
-    {
-      if (!$entity) return "null";
+    public SerializerBuilder $serializer;
 
-      $serializer = \JMS\Serializer\SerializerBuilder::create()->build();
-      return $serializer->serialize($entity, 'json');
+
+    //
+    public function sendJson($objOrArr)
+    {
+      if (!$objOrArr) return "null";
+        //dd("sendJson",$objOrArr);
+        $serializer = SerializerBuilder::create()->build();
+        $resultArray =  json_decode($serializer->serialize($objOrArr,'json'));
+
+
+        return JsonResponseDefault::create(
+            'success',
+            $resultArray,
+            '',
+            '',
+            "200"
+        );
     }
+
 }
