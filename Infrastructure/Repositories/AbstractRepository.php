@@ -25,8 +25,9 @@ abstract class AbstractRepository
     {
         $result = [];
         $model = $this->model;
+
         foreach ($arrayKeyVal as $key=>$val) {
-            if ($this->model && Schema::hasColumn($this->model->getTable(), $key)) {
+            if ($model && method_exists($model,'getTable') && Schema::hasColumn($model->getTable(), $key)) {
                 $result[$key] = $val;
             }
         }
@@ -51,8 +52,17 @@ abstract class AbstractRepository
 
     public function findBy(array $arrKeyAttrib)
     {
+
         $arrKeyAttrib = $this->checkAttr($arrKeyAttrib);
+
+        $model = $this->getModel();
+
         $lis = [];
+        if (!method_exists($model,'getTable')) {
+            dd($model,$arrKeyAttrib);
+            return null;
+        }
+
         $user = DB::table($this->model->getTable());
 
 

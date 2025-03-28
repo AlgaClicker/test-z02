@@ -20,8 +20,17 @@ class CounteragentService implements  CounteragentServiceContract
 
     public function createFromInn($inn)
     {
-        dd($this->getByInn($inn));
+        $counteragent = $this->getByInn($inn);
+        if ($counteragent) {
+            return $counteragent;
+        }
+
         $dadata = DaDataCompany::id(trim($inn), 1, null, BranchType::MAIN, CompanyType::LEGAL);
+
+        if ($dadata['suggestions']===[]) {
+            abort(400,"ИНН не найден");
+            
+        }
         $dadata = $dadata['suggestions'][0]['data'];
         $data = [
             "inn"=>$inn,
@@ -35,11 +44,11 @@ class CounteragentService implements  CounteragentServiceContract
     }
 
     public function getByInn($inn) {
-        return $this->counteragentRepository->fiindBy(['inn'=>$inn]);
+        return $this->counteragentRepository->findBy(['inn'=>$inn]);
     }
     public function getCounteragentById($id)
     {
-        return $this->counteragentRepository->fiindById($id);
+        return $this->counteragentRepository->findById($id);
     }
 
 }
