@@ -1,0 +1,15 @@
+{
+    "references": [
+        {
+            "path": "./tsconfig.app.json"
+        },
+    ],
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@components/*": [
+                "resources/js/components/*"
+            ],
+        }
+    }
+}
