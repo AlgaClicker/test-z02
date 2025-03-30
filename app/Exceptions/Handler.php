@@ -7,7 +7,7 @@ use Throwable;
 
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
-
+use Symfony\Component\HttpKernel\Exception\HttpException;
 class Handler extends ExceptionHandler
 {
     /**
@@ -39,17 +39,34 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception): Response
     {
-        // Пример кастомной обработки исключения валидации для API-запросов
-        if ($exception instanceof ValidationException && $request->expectsJson()) {
+
+        if (!$exception->getCode() || $exception->getCode() === 0) {
+            $code = 500;
+        } else {
+            $code = $exception->getCode();
+        }
+        if ($exception instanceof ValidationException ) {
             return response()->json([
                 'success' => false,
                 'data'    => $exception->errors(),
                 'message' => 'Validation error',
-                'code'    => 422,
-            ], 422);
+                'code'    => $code,
+            ], $code);
         }
 
-        // Можно добавить и другие проверки для конкретных типов исключений
+        if ($exception instanceof HttpException ) {
+            return response()->json([
+                'success' => false,
+                'data'    => $exception->getTrace(),
+                'message' => $exception->getMessage(),
+                'code'    => $code,
+            ], $code);
+        }
+        if ($exception instanceof \ErrorException  ) {
+            dd($exception);
+        }
+
+
 
         return parent::render($request, $exception);
     }

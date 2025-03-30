@@ -49,9 +49,9 @@ $app = Application::configure(basePath: dirname(__DIR__))
 
     })->create();
 
-    $app->singleton(
-        Illuminate\Contracts\Debug\ExceptionHandler::class,
-        App\Exceptions\Handler::class
-    );
+$app->singleton(
+    Illuminate\Contracts\Debug\ExceptionHandler::class,
+    App\Exceptions\Handler::class
+);
 
-    return $app;
+return $app;

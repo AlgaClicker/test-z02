@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 abstract class AbstractRepository
 {
 
-    private $model ;
+    private Model $model ;
     protected string $entity;
 
     public function setModel($model)
@@ -52,17 +52,16 @@ $result = [];
     public function findAllBy(array $arrKeyAttrib): ?array
     {
         $arrKeyAttrib = $this->checkAttr($arrKeyAttrib);
-        $model = $this->model;
-        foreach ($arrKeyAttrib as $key=>$val) {
-            $model->where($key,"=",$val);
+
+        $qb_model = $this->model->newModelQuery();
+          foreach ($arrKeyAttrib as $key=>$val) {
+              $qb_model->where($key,"=",$val);
+
         }
         $listEntity = [];
 
-
-        foreach ($model->get()->all() as $key => $objModel) {
-            //dd($objModel,$this->resultEntity($objModel));
+        foreach ($qb_model->get()->all() as  $objModel) {
             $listEntity[] = $this->resultEntity($objModel);
-
         }
 
         return $listEntity;
@@ -76,23 +75,23 @@ $result = [];
 
         $lis = [];
         if (!method_exists($model,'getTable')) {
-            dd($model,$arrKeyAttrib);
             return null;
         }
 
-        $table = DB::table($this->model->getTable());
 
+        $qb_model = $this->model->newModelQuery();
 
         foreach ($arrKeyAttrib as $key=>$attribute) {
-            $table->where($key,"=",$attribute);
+            $qb_model->where($key,"=",$attribute);
             $lis[$key] = $attribute;
         }
-        $table = $table->first();
+        $table = $qb_model->first();
+
         if ($table) {
             return $this->resultEntity($table);
         }
 
-        return null;
+        abort(404,'Не найдено');
 
 
     }

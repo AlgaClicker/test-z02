@@ -41,7 +41,7 @@ class AccountService implements AccountServiceContract
 
         $account = $this->usersRepository->getUserByEmail($email);
 
-        if ($account->getEmail() == null) {
+        if (!$account || $account->getEmail() == null) {
             abort("400","Авторизация не пройдена");
         }
 

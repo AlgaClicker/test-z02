@@ -41,7 +41,7 @@ class CounteragentService implements  CounteragentServiceContract
             "name"=> $dadata['name']['short_with_opf'],
             "ogrn" => $dadata['ogrn'],
             "address" => $dadata['address']['unrestricted_value'],
-            "user_id" => $this->accountService->getMe()->getId()
+            "user_id" => auth()->id()
         ];
 
         return $this->counteragentRepository->create($data);
@@ -52,7 +52,7 @@ class CounteragentService implements  CounteragentServiceContract
     }
     public function getCounteragentById($id)
     {
-        return $this->counteragentRepository->findById($id);
+        return $this->counteragentRepository->getAccountCounteragent($id,auth()->id());
     }
 
     public function deleteCounteragents()

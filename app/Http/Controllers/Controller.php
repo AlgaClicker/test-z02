@@ -21,13 +21,11 @@ abstract class Controller
         $resultArray =  json_decode($serializer->serialize($objOrArr,'json'));
 
 
-        return JsonResponseDefault::create(
-            'success',
-            $resultArray,
-            '',
-            '',
-            "200"
-        );
+        return response()->json([
+            'success' => true,
+            'data'    => $resultArray,
+            'code'    => 200,
+        ],200);
     }
 
 }

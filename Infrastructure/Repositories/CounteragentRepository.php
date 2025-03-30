@@ -15,9 +15,16 @@ final class CounteragentRepository extends AbstractRepository implements  Counte
         $this->entity = Counteragent::class;
     }
 
-
+    public function getAccountCounteragent($id, $account_id)
+    {
+        return parent::findBy([
+           "id"=>$id,
+            "user_id" => $account_id
+        ]);
+    }
     public function getAccountCounteragents(Account $account): array | null
     {
+
         return parent::findAllBy(['user_id'=>$account->getId()]);
     }
 
