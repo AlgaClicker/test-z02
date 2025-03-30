@@ -62,8 +62,9 @@ class Handler extends ExceptionHandler
                 'code'    => $code,
             ], $code);
         }
+
         if ($exception instanceof \ErrorException  ) {
-            dd($exception);
+
         }
 
 
