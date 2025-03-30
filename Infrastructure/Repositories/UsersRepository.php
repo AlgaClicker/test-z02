@@ -18,22 +18,26 @@ class UsersRepository extends AbstractRepository implements UsersRepositoryContr
          $this->user = $user;
      }
 
-    public function create(array $arrayKeyVal): ?Account
-    {
-        $result = parent::create($arrayKeyVal);
-        if (!$result) return null;
-        return $this->setName($result);
-    }
 
+    public function register(array $arrayKeyVal)
+    {
+        $arrayKeyVal['password'] = Hash::make($arrayKeyVal['password']);
+
+        if (array_key_exists('full_name',$arrayKeyVal)) {
+            $arrayKeyVal['name'] = $arrayKeyVal['full_name'];
+        } else {
+            $arrayKeyVal['name'] =  $arrayKeyVal['email'];
+        }
+
+        return $this->create($arrayKeyVal);
+
+    }
     public function getByEmail(string $email): ?Account {
 
-        $this->model = $this->getUserByEmail($email);
+        $account= $this->getUserByEmail($email);
 
-        if ($this->model) {
-            $account = $this->resultEntity($this->model);
-
-            if (!$account->getEmail()) return null;
-            return $this->setName($account);
+        if ($account) {
+            return  $account;
         }
         return null;
     }
@@ -41,10 +45,7 @@ class UsersRepository extends AbstractRepository implements UsersRepositoryContr
     public function getById(string $id): ?Account
     {
 
-        $this->model = $this->findById($id);
-
-        $account =  $this->resultEntity($this->model);
-
+        $account = $this->findById($id);
         return $this->setName($account);
     }
     public function getUserByEmail(string $email): ?Account
@@ -56,20 +57,24 @@ class UsersRepository extends AbstractRepository implements UsersRepositoryContr
 
     public function checkPassword(Account $account, string $password): ?User
     {
-        $this->setModel($this->user);
-        $user = $this->findById($account->getId());
-        if (! $user || ! Hash::check($password, $user->password)) {
+        $user = $this->user;
+        $this->setModel($user);
+        $user = $this->user->find($account->getId());
+        $password_hash = $user->password;
+        //$account = $this->findById($user->id);
+
+        if (! $account || ! $user || ! Hash::check($password, $password_hash)) {
             return null;
         }
+
         return $user;
     }
 
+
     public function setName(Account $account): Account
     {
-
         $this->setModel($this->user);
-        $user = $this->findById($account->getId());
-
+        $user = $this->getModel()->find($account->getId());
         $account->setFullName($user->name ?? "");
         return $account;
     }

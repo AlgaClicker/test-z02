@@ -15,24 +15,20 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::post('/register', [AuthController::class, 'authRegister'])->name('register');
-
-
+Route::post('/register', [AuthController::class, 'authRegister'])->name('register')->middleware(['api']);
 Route::post('/login', [AuthController::class, 'authLogin'])->name('login');
-
-
 
 // Группируем маршруты, требующие авторизации
 Route::middleware('auth:sanctum')->group(callback: function () {
     Route::post('counteragent/add/inn', [CounteragentController::class, 'create']);
     Route::get('counteragent/{id}/', [CounteragentController::class, 'get']);
-
     Route::get('counteragents', [CounteragentController::class, 'list']);
 
     Route::get('/me', [AuthController::class, 'authGetMe']);
+    Route::get('/account/delete', [AuthController::class, 'deleteMyAccount']);
 
+    // Возвращает списк эндпоинтов
     Route::get('/routes', function (){
-
         $routes = app('router')->getRoutes()->getRoutes();
         $listRoutes = [];
         foreach ($routes as $route) {
@@ -50,7 +46,6 @@ Route::middleware('auth:sanctum')->group(callback: function () {
                 }
             }
         }
-
         return $listRoutes;
     });
 
