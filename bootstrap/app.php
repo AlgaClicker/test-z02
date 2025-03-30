@@ -9,6 +9,8 @@ use App\Exceptions\ApplicationException;
 use Illuminate\Support\Facades\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Response\JsonResponseDefault;
+use Laravel\Sanctum\Http\Middleware\CheckAbilities;
+use Laravel\Sanctum\Http\Middleware\CheckForAnyAbility;
 
 use Illuminate\Validation\ValidationException;
 
@@ -21,6 +23,11 @@ $app = Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+
+        $middleware->alias([
+            'abilities' => CheckAbilities::class,
+            'ability' => CheckForAnyAbility::class,
+        ]);
 
         $middleware->web(append: [
             HandleInertiaRequests::class,

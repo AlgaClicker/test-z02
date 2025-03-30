@@ -62,7 +62,6 @@ class UsersRepository extends AbstractRepository implements UsersRepositoryContr
         $user = $this->user->find($account->getId());
         $password_hash = $user->password;
         //$account = $this->findById($user->id);
-
         if (! $account || ! $user || ! Hash::check($password, $password_hash)) {
             return null;
         }

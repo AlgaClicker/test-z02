@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\CounteragentController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Web\AuthWebController;
 
 
 Route::get('/', [ApiController::class,'apiIndex']);
@@ -16,7 +17,8 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::post('/register', [AuthController::class, 'authRegister'])->name('register')->middleware(['api']);
-Route::post('/login', [AuthController::class, 'authLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'authLogin'])->name('apilogin');
+Route::get('/login', [AuthController::class, 'authLogin'])->middleware(['api'])->name('login');
 
 // Группируем маршруты, требующие авторизации
 Route::middleware('auth:sanctum')->group(callback: function () {

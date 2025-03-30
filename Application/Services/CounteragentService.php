@@ -48,7 +48,10 @@ class CounteragentService implements  CounteragentServiceContract
     }
 
     public function getByInn($inn) {
-        return $this->counteragentRepository->findBy(['inn'=>$inn]);
+        return $this->counteragentRepository->findBy([
+            'inn'=>$inn,
+            'user_id'=>auth()->id()
+        ]);
     }
     public function getCounteragentById($id)
     {

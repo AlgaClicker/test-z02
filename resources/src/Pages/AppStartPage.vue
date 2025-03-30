@@ -1,5 +1,5 @@
 <script setup>
-import Layout from './Layout.vue'
+import Layout from '../Layout.vue'
 </script>
 
 <template>
@@ -8,3 +8,4 @@ import Layout from './Layout.vue'
         <p>Hello , welcome to your first Inertia app!</p>
     </Layout>
 </template>
+

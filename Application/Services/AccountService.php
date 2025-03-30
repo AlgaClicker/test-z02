@@ -1,12 +1,14 @@
 <?php
 
 namespace Application\Services;
+use App\Models\User;
 use Application\Contracts\Repositories\UsersRepositoryContract;
 use Application\Contracts\Services\AccountServiceContract;
 use Application\Entities\Account;
 
 use Application\Contracts\Services\CounteragentServiceContract;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use function Termwind\terminal;
@@ -48,12 +50,13 @@ class AccountService implements AccountServiceContract
 
 
         $user = $this->usersRepository->checkPassword($account, $password);
+        auth()->setUser($user);
+        $token = $user->createToken("auth")->plainTextToken;
+
         if (!$user) {
-            abort("400","Авторизация не пройдена");
+            abort("401","Авторизация не пройдена");
         }
-
-        $token = $user->createToken($email)->plainTextToken;
-
+        $account = $this->usersRepository->getById(auth()->user()->getAuthIdentifier());
         $account->setToken($token);
         return $account;
     }
@@ -70,8 +73,11 @@ class AccountService implements AccountServiceContract
 
     public function getMe() : ?Account
     {
-        $user = auth()->user();
-        return $this->usersRepository->getById($user->getAuthIdentifier());
+
+        $account = $this->getAccountFromId(auth()->user()->getAuthIdentifier());
+        $account->setId(auth()->user()->getAuthIdentifier());
+        //$account->setToken();
+        return $account;
     }
 
     public function deleteMyAccount()
@@ -81,5 +87,11 @@ class AccountService implements AccountServiceContract
         $this->usersRepository->delete($account_id);
 
         return $this->usersRepository->delete($account_id);
+    }
+
+    public function checkToken(string $token): ? User
+    {
+
+        return null;
     }
 }

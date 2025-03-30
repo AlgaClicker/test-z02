@@ -52,12 +52,12 @@ $result = [];
     public function findAllBy(array $arrKeyAttrib): ?array
     {
         $arrKeyAttrib = $this->checkAttr($arrKeyAttrib);
-
         $qb_model = $this->model->newModelQuery();
-          foreach ($arrKeyAttrib as $key=>$val) {
-              $qb_model->where($key,"=",$val);
 
+        foreach ($arrKeyAttrib as $key=>$val) {
+          $qb_model->where($key,"=",$val);
         }
+
         $listEntity = [];
 
         foreach ($qb_model->get()->all() as  $objModel) {
@@ -90,22 +90,15 @@ $result = [];
         if ($table) {
             return $this->resultEntity($table);
         }
-
-        abort(404,'Не найдено');
-
-
     }
 
     public function findById($id)
     {
         $model = $this->model->find($id);
-
-
         return  $this->resultEntity($model);
     }
 
     public function resultEntity($model) {
-
         $entity = new $this->entity();
         if (is_object($model) && get_class($model) == 'stdClass') {
             $arrKeyVal = get_object_vars($model);
@@ -145,16 +138,11 @@ $result = [];
     }
     public function deleteAllBy(array $arrayWhere = [])
     {
-
-        //$table = DB::table($this->model->getTable());
         $table =$this->model;
-
         foreach ($arrayWhere as $key=>$attribute) {
             $table->where($key,"=",$attribute);
         }
-
         return $table->delete();
-
     }
 
 }

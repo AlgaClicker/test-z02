@@ -10,6 +10,11 @@ abstract class Controller
 {
     public SerializerBuilder $serializer;
 
+    public function serializer($data)
+    {
+        $serializer = SerializerBuilder::create()->build();
+        return json_decode($serializer->serialize($data,'json'));
+    }
 
     //
     public function sendJson($objOrArr)
@@ -17,13 +22,12 @@ abstract class Controller
 
       if (!$objOrArr) return "null";
         //dd("sendJson",$objOrArr);
-        $serializer = SerializerBuilder::create()->build();
-        $resultArray =  json_decode($serializer->serialize($objOrArr,'json'));
+
 
 
         return response()->json([
             'success' => true,
-            'data'    => $resultArray,
+            'data'    => $this->serializer($objOrArr),
             'code'    => 200,
         ],200);
     }
