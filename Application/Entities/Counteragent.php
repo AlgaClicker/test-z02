@@ -2,7 +2,8 @@
 namespace Application\Entities;
 use Ramsey\Uuid\Uuid;
 
-class Counteragent {
+class Counteragent extends AbstractEntity
+{
 
     private string $id;
     private int $inn;

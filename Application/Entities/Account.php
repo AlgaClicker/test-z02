@@ -1,10 +1,12 @@
 <?php
 namespace Application\Entities;
 
+//use Illuminate\Foundation\Auth\User as Authenticatable;
 
 use Ramsey\Uuid\Uuid;
-class Account
+final class Account extends AbstractEntity
 {
+
     /**
      * @var string UUID
      */

@@ -3,6 +3,7 @@ namespace Infrastructure\Repositories;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Exceptions\Renderer\Exception;
 use PHPUnit\Framework\Constraint\ObjectEquals;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
@@ -22,29 +23,28 @@ abstract class AbstractRepository
     }
     public function checkAttr(array $arrayKeyVal): array
     {
-        $result = [];
+$result = [];
         $model = $this->model;
-
+        $ls=[];
         foreach ($arrayKeyVal as $key=>$val) {
             if ($model && method_exists($model,'getTable') && Schema::hasColumn($model->getTable(), $key)) {
                 $result[$key] = $val;
             }
+            $ls[] = $key;
         }
 
         return $result;
     }
     public function create(array $arrayKeyVal) {
 
+
         $arrayKeyVal = $this->checkAttr($arrayKeyVal);
+
         try {
             $model =  $this->model->create($arrayKeyVal);
-
-
             return $this->resultEntity( $model);
         } catch ( \Exception $e ) {
-            return null;
-            dd("create Exception",$e);
-            //abort('500', $e->getMessage());
+            abort(520, $e->getMessage());
         }
 
     }
@@ -80,16 +80,16 @@ abstract class AbstractRepository
             return null;
         }
 
-        $user = DB::table($this->model->getTable());
+        $table = DB::table($this->model->getTable());
 
 
         foreach ($arrKeyAttrib as $key=>$attribute) {
-            $user->where($key,"=",$attribute);
+            $table->where($key,"=",$attribute);
             $lis[$key] = $attribute;
         }
-        $user = $user->first();
-        if ($user) {
-            return $this->resultEntity($user);
+        $table = $table->first();
+        if ($table) {
+            return $this->resultEntity($table);
         }
 
         return null;
@@ -137,10 +137,25 @@ abstract class AbstractRepository
                 }
             }
         }
-
-
         return  $entity;
     }
 
+    public function delete($id)
+    {
+        DB::table($this->model->getTable())->delete($id);
+    }
+    public function deleteAllBy(array $arrayWhere = [])
+    {
+
+        //$table = DB::table($this->model->getTable());
+        $table =$this->model;
+
+        foreach ($arrayWhere as $key=>$attribute) {
+            $table->where($key,"=",$attribute);
+        }
+
+        return $table->delete();
+
+    }
 
 }

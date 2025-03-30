@@ -7,9 +7,18 @@ use Exception;
 class ApplicationException extends Exception
 {
 
-    public function context(): array
+    public function context(Exception $exception): array
     {
-       dd("ApplicationException", $this);
+        //return $exception->getMessage();
+       dd("ApplicationException", $exception);
     }
 
+    /**
+     * Report the exception.
+     */
+    public function report(): void
+    {
+        // ...
+        dd("ApplicationException@report");
+    }
 }

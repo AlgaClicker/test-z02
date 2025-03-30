@@ -6,10 +6,13 @@ use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\HandleApiRequests;
 use App\Exceptions\ApplicationException;
+use Illuminate\Support\Facades\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Response\JsonResponseDefault;
 
-return Application::configure(basePath: dirname(__DIR__))
+use Illuminate\Validation\ValidationException;
+
+$app = Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
         api: __DIR__.'/../routes/api.php',
@@ -30,8 +33,25 @@ return Application::configure(basePath: dirname(__DIR__))
 
     })
     ->withExceptions(function (Exceptions $exceptions) {
+        $exceptions->report(function (ApplicationException $e) {
+            // Дополнительная логика логирования ApplicationException
+            Log::info("ApplicationException: message",$e->getMessage());
+        });
 
+        $exceptions->report(function (ValidationException  $e) {
+            // ...
+
+            dd($e);
+
+        });
 
 
 
     })->create();
+
+    $app->singleton(
+        Illuminate\Contracts\Debug\ExceptionHandler::class,
+        App\Exceptions\Handler::class
+    );
+
+    return $app;

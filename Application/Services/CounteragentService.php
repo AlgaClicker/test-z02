@@ -4,22 +4,22 @@ namespace Application\Services;
 
 use Application\Contracts\Repositories\CounteragentRepositoryContract;
 use Application\Contracts\Services\CounteragentServiceContract;
-use Application\Contracts\Services\AccountServiceContract;
 use MoveMoveIo\DaData\Facades\DaDataCompany;
 use MoveMoveIo\DaData\Enums\BranchType;
 use MoveMoveIo\DaData\Enums\CompanyType;
+use Application\Contracts\Repositories\UsersRepositoryContract;
 
 class CounteragentService implements  CounteragentServiceContract
 {
 
     private CounteragentRepositoryContract $counteragentRepository;
-    private AccountServiceContract $accountService;
+    private UsersRepositoryContract $usersRepository;
     public function __construct(
         CounteragentRepositoryContract $counteragentRepository,
-        AccountServiceContract $accountService
+        UsersRepositoryContract $usersRepository
     ){
         $this->counteragentRepository = $counteragentRepository;
-        $this->accountService = $accountService;
+        $this->usersRepository = $usersRepository;
     }
 
     public function createFromInn($inn)
@@ -41,7 +41,7 @@ class CounteragentService implements  CounteragentServiceContract
             "name"=> $dadata['name']['short_with_opf'],
             "ogrn" => $dadata['ogrn'],
             "address" => $dadata['address']['unrestricted_value'],
-            "user_id" => auth()->user()->getAuthIdentifier()
+            "user_id" => $this->accountService->getMe()->getId()
         ];
 
         return $this->counteragentRepository->create($data);
@@ -55,10 +55,19 @@ class CounteragentService implements  CounteragentServiceContract
         return $this->counteragentRepository->findById($id);
     }
 
-
+    public function deleteCounteragents()
+    {
+        //$this->accountService->getMe()->getId()
+        //$this->counteragentRepository->
+    }
     public function getMyCounteragents()
     {
-        return $this->counteragentRepository->getAccountCounteragents($this->accountService->getMe());
+        $account = $this->usersRepository->getById(auth()->id());
+        return $this->counteragentRepository->getAccountCounteragents($account);
     }
-
+    public function deleteMyCounteragents()
+    {
+        $account = $this->usersRepository->getById(auth()->id());
+        return $this->counteragentRepository->deleteAccountCounteragents($account);
+    }
 }

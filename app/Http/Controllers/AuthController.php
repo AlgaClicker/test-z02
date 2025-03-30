@@ -25,14 +25,12 @@ class AuthController extends Controller
 
     function authRegister(Request $request)
     {
-
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required',
-            'password_confirm' => 'required',
+            'password' => 'required|string|min:4',
+            'password_confirm' => 'required_with:password|same:password|min:4',
+            'full_name'=> 'sometimes|required'
         ]);
-
-
         return $this->sendJson($this->accountService->register($request->all()));
     }
 
@@ -54,4 +52,10 @@ class AuthController extends Controller
     {
         return $this->sendJson($this->accountService->getMe());
     }
+
+    public function deleteMyAccount()
+    {
+        return $this->sendJson($this->accountService->deleteMyAccount());
+    }
+
 }
