@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use Application\Contracts\Services\CounteragentServiceContract;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 class CounteragentWebController extends Controller
@@ -27,7 +28,17 @@ class CounteragentWebController extends Controller
 
     public function addInn(Request $request)
     {
+        $request->validate([
+            'inn' => 'required|digits_between:10,13',
+        ]);
 
-        return $this->list($request);
+            $this->counteragentService->createFromInn($request->get('inn'));
+        $list = $this->counteragentService->getMyCounteragents();
+        Redirect::to("/counteragents");
+
+
+
+
+
     }
 }

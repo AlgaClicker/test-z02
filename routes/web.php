@@ -22,7 +22,8 @@ Route::get('/loginout', [AuthWebController::class, 'authWebLoginOut'])->middlewa
 Route::get('/about',  [AboutWebController::class,'index'])->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->prefix('counteragents')->group(function () {
-    Route::get('/', [CounteragentWebController::class,'list']);
+    Route::get('/', [CounteragentWebController::class,'list'])->name('counteragents-list');
+
     Route::post('/add/inn', [CounteragentWebController::class,'addInn']);
     Route::get('/add/inn', [CounteragentWebController::class,'list']);
 });

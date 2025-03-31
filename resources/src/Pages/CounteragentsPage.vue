@@ -1,5 +1,6 @@
 <script setup>
 import Layout from '../Layout.vue'
+import Table from '../Components/TabCounteragentCoponenet.vue'
 </script>
 
 
@@ -18,18 +19,16 @@ import Layout from '../Layout.vue'
                     </button>
             </div>
             <!-- Содержимое карточки -->
-            <div class="px-4 py-3">
-                <p class="text-gray-700">
-                    {{counteragents}}
-                </p>
+            <div class="px-4 py-3 overflow-x-auto">
+
+                    <Table :counteragents="counteragents"></Table>
             </div>
             <!-- Футер карточки с действием -->
             <div class="px-4 py-3 border-t flex justify-end">
-                <button class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition">
-                    Действие
-                </button>
+                Записей: {{counteragents.length}}
             </div>
         </div>
+
 
         <div
             v-if="isOpen"
@@ -37,7 +36,7 @@ import Layout from '../Layout.vue'
         >
             <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
                 <h2 class="text-2xl font-bold mb-4">Добавить контрагента</h2>
-                <form @submit.prevent="submitForm">
+                <form >
                     <div class="mb-4">
                         <label for="name" class="block text-sm font-medium mb-1">
                             Название
@@ -70,10 +69,11 @@ import Layout from '../Layout.vue'
 </template>
 <script>
 import {router, usePage} from "@inertiajs/vue3";
+
 export default {
     props: {
         counteragents: Object,
-
+        errors: Object,
     },
     data() {
         return {
@@ -86,6 +86,7 @@ export default {
     methods: {
         addInnCounteragent() {
             router.post('counteragents/add/inn',this.model)
+            this.isOpen = false;
         },
         openModal() {
             this.isOpen = true;
