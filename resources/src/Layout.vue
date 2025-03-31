@@ -103,9 +103,7 @@ export default {
             return localStorage.getItem('auth_token') ? true : false
         }
     },
-    mounted() {
-        console.log("Layout.vue",localStorage.getItem('auth_token'))
-    }
+
 
 }
 </script>

@@ -105,7 +105,17 @@ export default {
         let token = localStorage.getItem('auth_token');
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         if (token) {
-            router.get("/")
+            axios({
+                method:'get',
+                url: "api/me",
+                baseURL: '/',
+            }).then(()=>{
+                router.get("/")
+            }).catch(error => {
+                axios.defaults.headers.common['Authorization']= ""
+                localStorage.setItem('auth_token',"")
+            });
+           //
         }
         console.log("created",localStorage.getItem('auth_token'))
 

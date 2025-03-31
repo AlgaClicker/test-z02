@@ -29,7 +29,7 @@ class AccountService implements AccountServiceContract
     public function getAccountFromId($id): Account
     {
 
-        return new Account("free@local.local");
+        return $this->usersRepository->getById($id);
     }
 
     public function getAccountFromEmail(string $email): ?Account
@@ -53,7 +53,7 @@ class AccountService implements AccountServiceContract
         auth()->setUser($user);
         $token = $user->createToken("auth")->plainTextToken;
 
-        if (!$user) {
+        if (!auth()->user()) {
             abort("401","Авторизация не пройдена");
         }
         $account = $this->usersRepository->getById(auth()->user()->getAuthIdentifier());
@@ -75,8 +75,9 @@ class AccountService implements AccountServiceContract
     {
 
         $account = $this->getAccountFromId(auth()->user()->getAuthIdentifier());
+
         $account->setId(auth()->user()->getAuthIdentifier());
-        //$account->setToken();
+
         return $account;
     }
 
