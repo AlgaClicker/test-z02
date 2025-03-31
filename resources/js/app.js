@@ -1,8 +1,19 @@
 import {createApp, h} from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
+import axios from "axios";
+
+
+
+let token =  localStorage.getItem('auth_token')
+if (token) {
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    console.log("Layout",token);
+}
+
 
 void createInertiaApp({
     resolve: name => {
+
         const pages = import.meta.glob('../src/Pages/**/*.vue', { eager: true })
         return pages[`../src/Pages/${name}.vue`]
     },

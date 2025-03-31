@@ -9,8 +9,6 @@ import { router,usePage,Deferred, useRemember  } from '@inertiajs/vue3'
     <Layout>
         <Deferred data="permissions">
             <template #fallback>
-                <div>Loading...</div>
-                <div>{{can}}</div>
             </template>
 
             <div v-for="permission in permissions">
@@ -84,7 +82,7 @@ import { router,usePage,Deferred, useRemember  } from '@inertiajs/vue3'
 <script>
 
 import {router, usePage} from "@inertiajs/vue3";
-import {reactive, watch,watchEffect} from "vue";
+import {reactive, watch, ref,watchEffect} from "vue";
 import axios from 'axios'
 const page = usePage()
 
@@ -94,9 +92,6 @@ const form = reactive({
     password: 'test@test.local',
     email: 'test@test.local',
 })
-
-let token =  localStorage.getItem('auth_token')
-
 
 export default {
   props: {
@@ -108,8 +103,7 @@ export default {
   computed: {
   },
   mount() {
-
-
+    console.log("mount login ")
   },
   methods: {
       async submit()  {

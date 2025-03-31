@@ -65,6 +65,7 @@ class CounteragentService implements  CounteragentServiceContract
     }
     public function getMyCounteragents()
     {
+
         $account = $this->usersRepository->getById(auth()->id());
         return $this->counteragentRepository->getAccountCounteragents($account);
     }
