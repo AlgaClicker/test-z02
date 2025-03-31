@@ -2,11 +2,12 @@
 namespace Application\Entities;
 
 //use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Sanctum\HasApiTokens;
 
 use Ramsey\Uuid\Uuid;
 final class Account extends AbstractEntity
 {
-
+    use HasApiTokens;
     /**
      * @var string UUID
      */

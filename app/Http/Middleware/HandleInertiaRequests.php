@@ -2,8 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use Closure;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
+
 
 class HandleInertiaRequests extends Middleware
 {
@@ -16,6 +19,16 @@ class HandleInertiaRequests extends Middleware
      */
     protected $rootView = 'app';
 
+    /**
+     * Handle an incoming request.
+     *
+     * @param Request $request
+     * @param Closure $next
+     * @param null $guard
+     * @return mixed
+     * @throws ApplicationException
+     */
+
 
     /**
      * Determines the current asset version.
@@ -24,6 +37,9 @@ class HandleInertiaRequests extends Middleware
      */
     public function version(Request $request): ?string
     {
+        if ($request->method()=="POST") {
+            //dd($request);
+        }
 
         return parent::version($request);
     }
@@ -37,9 +53,19 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-
         return array_merge(parent::share($request), [
-            //
+
         ]);
+    }
+    protected function redirectTo($request)
+    {
+        // Если запрос ожидает JSON (API или Inertia)
+        if ($request->expectsJson()) {
+            // Можно вернуть ошибку, чтобы не было редиректа
+            abort(401, 'Unauthenticated');
+        }
+
+        // Иначе отправляем на страницу логина (или другую, по желанию)
+        return route('login');
     }
 }
