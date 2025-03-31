@@ -4,6 +4,7 @@ import { reactive } from 'vue'
 import { router,usePage,Deferred, useRemember  } from '@inertiajs/vue3'
 
 
+
 </script>
 <template>
     <Layout>
@@ -23,8 +24,6 @@ import { router,usePage,Deferred, useRemember  } from '@inertiajs/vue3'
                 <!-- Заголовок карточки -->
                 <h2 class="text-[20px] font-semibold leading-[28px] text-[#030712]">
                     Вход в аккаунт
-                    <p>Account :{{account}}</p>
-                    {{token}}
                 </h2>
 
                 <!-- Форма авторизации -->
@@ -86,33 +85,42 @@ import {reactive, watch, ref,watchEffect} from "vue";
 import axios from 'axios'
 const page = usePage()
 
-
-const form = reactive({
-    _token: page.props?.csrf_token,
-    password: 'test@test.local',
-    email: 'test@test.local',
-})
-
 export default {
-  props: {
+    props: {
       account: Object,
       token: null,
-      auth: "",
+      isAuth: "",
       can: ""
-  },
-  computed: {
-  },
-  mount() {
-    console.log("mount login ")
-  },
-  methods: {
+    },
+    data() {
+        return {
+            form: {
+                token: page.props?.csrf_token,
+                password: 'test@test.local',
+                email: 'test@test.local',
+            }
+        }
+    },
+    created() {
+        let token = localStorage.getItem('auth_token');
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        if (token) {
+            router.get("/")
+        }
+        console.log("created",localStorage.getItem('auth_token'))
+
+    },
+    mount() {
+        console.log("mount login ")
+
+    },
+    methods: {
       async submit()  {
-          await router.post('/login', form, {
+          await router.post('/login', this.form, {
               // Используем onSuccess для обработки ответа
               onSuccess: (page) => {
                   // Предполагается, что сервер возвращает токен в page.props.token
                   const token = page.props.auth;
-
                   if (token) {
                       // Сохраняем токен в localStorage
                       localStorage.setItem('auth_token', token);
@@ -127,7 +135,7 @@ export default {
               },
           });
       }
-  },
+    },
 
 };
 

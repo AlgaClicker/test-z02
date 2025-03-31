@@ -3,6 +3,8 @@ import { createInertiaApp } from '@inertiajs/vue3'
 import axios from "axios";
 
 
+axios.defaults.withCredentials = true;
+axios.defaults.withXSRFToken = true;
 
 let token =  localStorage.getItem('auth_token')
 if (token) {

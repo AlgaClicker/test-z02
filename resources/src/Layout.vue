@@ -1,10 +1,5 @@
 <script setup>
 import { Link } from '@inertiajs/vue3'
-import axios from "axios";
-
-
-
-
 </script>
 
 <template>
@@ -35,11 +30,12 @@ import axios from "axios";
 </template>
 
 <script>
-import axios from 'axios'
+
 import {router} from "@inertiajs/vue3";
 export default {
+    components: {router},
     props: {
-        account: Object
+        account: Object,
     },
     data() {
         return {
@@ -82,9 +78,12 @@ export default {
                     submit: this.loginout
                 },
 
+
+
             ],
         }
     },
+
     methods: {
         loginout() {
             console.log("loginout")
@@ -105,7 +104,7 @@ export default {
         }
     },
     mounted() {
-        console.log("Layout.vue")
+        console.log("Layout.vue",localStorage.getItem('auth_token'))
     }
 
 }

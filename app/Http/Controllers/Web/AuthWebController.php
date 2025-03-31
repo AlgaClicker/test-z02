@@ -16,12 +16,15 @@ class AuthWebController extends Controller
     }
 
     public function authWebLoginGet(Request $request) {
+
+
         return Inertia::render('LoginPage', [
             'account' => auth()->user(),
         ]);
     }
     public function authWebLogin(Request $request)
     {
+
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',

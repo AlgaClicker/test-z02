@@ -31,7 +31,7 @@ import Layout from '../Layout.vue'
                                 class="block w-full h-10 px-3 border border-[#E4E4E7] rounded-md text-[14px] text-[#71717A] focus:outline-none focus:ring-2 focus:ring-orange-300"
                                 placeholder="example@yandex.ru"
                             />
-                            <div v-if="errors.email">{{ errors.email }}</div>
+                            <div v-if="errors?.email">{{ errors.email }}</div>
                         </div>
 
                         <!-- Пароль -->
@@ -45,7 +45,7 @@ import Layout from '../Layout.vue'
                                 class="block w-full h-10 px-3 border border-[#E4E4E7] rounded-md text-[14px] text-[#71717A] focus:outline-none focus:ring-2 focus:ring-orange-300"
                                 placeholder="Введите пароль"
                             />
-                            <div v-if="errors.password">{{ errors.password }}</div>
+                            <div v-if="errors?.password">{{ errors.password }}</div>
                         </div>
 
                         <!-- Подтверждение пароля (по желанию) -->
@@ -59,7 +59,7 @@ import Layout from '../Layout.vue'
                                 class="block w-full h-10 px-3 border border-[#E4E4E7] rounded-md text-[14px] text-[#71717A] focus:outline-none focus:ring-2 focus:ring-orange-300"
                                 placeholder="Повторите пароль"
                             />
-                            <div v-if="errors.password_confirm">{{ errors.password_confirm }}</div>
+                            <div v-if="errors?.password_confirm">{{ errors.password_confirm }}</div>
                         </div>
                     </div>
 

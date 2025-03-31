@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Support\Facades\Log;
 use Inertia\Middleware;
 use Illuminate\Http\Request;
 use Application\Contracts\Services\AccountServiceContract;
@@ -21,22 +20,7 @@ class HandleApiRequests extends Middleware
     }
     public function handle(Request $request, Closure $next, $guard=null)
     {
-        $authHeader = $request->header('Authorization');
-        if ($authHeader) {
-
-            list($jwt) = (sscanf($authHeader, 'Bearer %s'));
-            $user = $this->accountService->checkToken($jwt);
-
-        }
         return $next($request);
     }
-    public function version(Request $request): ?string
-    {
-        return parent::version($request);
-    }
 
-    public function share(Request $request): array
-    {
-
-    }
 }

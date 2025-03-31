@@ -17,8 +17,6 @@ use Infrastructure\Repositories\UsersRepository;
 use Application\Contracts\Repositories\CounteragentRepositoryContract;
 use Infrastructure\Repositories\CounteragentRepository;
 
-use Laravel\Sanctum\Sanctum;
-use  App\Sanctum\PersonalAccessToken;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -42,7 +40,5 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
-        //
     }
 }
