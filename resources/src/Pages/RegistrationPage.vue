@@ -1,25 +1,5 @@
 <script setup>
-import { reactive } from 'vue'
-import { router,usePage  } from '@inertiajs/vue3'
 import Layout from '../Layout.vue'
-
-const page = usePage()
-// Инициализируем реактивный объект для формы
-const form = reactive({
-    email: 'test@test.local',
-    password: '',
-    password_confirm: '',
-    _token: page.props.csrf_token,
-})
-
-// Функция отправки формы через Inertia
-async function submit() {
-    await router.post('/auth/register', form)
-
-}
-
-
-
 </script>
 
 <template>
@@ -29,8 +9,17 @@ async function submit() {
                 <h2 class="text-[20px] font-semibold leading-[28px] text-[#030712]">
                     Регистрация
                 </h2>
-                <form @submit.prevent="submit" class="flex flex-col gap-4">
-                    <div class="flex flex-col gap-4">
+                <h3 v-if="account">
+                    Аккаунт успешно создан
+                    <a href="/login" class="underline hover:text-[#FF6E4E]">
+                        Войти
+                    </a>
+                </h3>
+                <div>
+
+                </div>
+                <form  class="flex flex-col gap-4">
+                    <div class="flex flex-col gap-4" >
                         <!-- Email -->
                         <div>
                             <label class="block text-[14px] font-medium text-[#111827] mb-1">
@@ -42,6 +31,7 @@ async function submit() {
                                 class="block w-full h-10 px-3 border border-[#E4E4E7] rounded-md text-[14px] text-[#71717A] focus:outline-none focus:ring-2 focus:ring-orange-300"
                                 placeholder="example@yandex.ru"
                             />
+                            <div v-if="errors.email">{{ errors.email }}</div>
                         </div>
 
                         <!-- Пароль -->
@@ -55,6 +45,7 @@ async function submit() {
                                 class="block w-full h-10 px-3 border border-[#E4E4E7] rounded-md text-[14px] text-[#71717A] focus:outline-none focus:ring-2 focus:ring-orange-300"
                                 placeholder="Введите пароль"
                             />
+                            <div v-if="errors.password">{{ errors.password }}</div>
                         </div>
 
                         <!-- Подтверждение пароля (по желанию) -->
@@ -68,11 +59,13 @@ async function submit() {
                                 class="block w-full h-10 px-3 border border-[#E4E4E7] rounded-md text-[14px] text-[#71717A] focus:outline-none focus:ring-2 focus:ring-orange-300"
                                 placeholder="Повторите пароль"
                             />
+                            <div v-if="errors.password_confirm">{{ errors.password_confirm }}</div>
                         </div>
                     </div>
 
                     <button
-                        type="submit"
+                        type="button"
+                        @click="submit"
                         class="w-full h-10 bg-[#FF6E4E] text-[#FAFAFA] rounded-md flex items-center justify-center text-[14px] font-medium hover:bg-[#ff5a39] transition-colors"
                     >
                         Создать аккаунт
@@ -92,7 +85,44 @@ async function submit() {
     </Layout>
 </template>
 
+<script>
 
+import { router,usePage  } from '@inertiajs/vue3'
+const page = usePage()
+
+export default {
+    components: {
+        page
+    },
+    props: {
+        account: Object ?? null,
+        errors: Object,
+        token: null,
+        auth: "",
+        can: ""
+    },
+    data() {
+        return {
+            form: {
+                email: 'test@test.local',
+                password: '',
+                password_confirm: '',
+                _token: page.props.csrf_token,
+            },
+        }
+    },
+    computed: {
+    },
+    mount() {
+        console.log("mount register page")
+    },
+    methods: {
+        async submit() {
+            await router.post('/auth/register', this.form)
+        }
+    }
+}
+</script>
 
 <style scoped>
 /* Дополнительные стили можно добавить здесь */

@@ -18,7 +18,7 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/register', [AuthController::class, 'authRegister'])->name('register')->middleware(['api']);
 Route::post('/login', [AuthController::class, 'authLogin'])->name('apilogin');
-Route::get('/login', [AuthController::class, 'authLogin'])->middleware(['api'])->name('login');
+
 
 // Группируем маршруты, требующие авторизации
 Route::middleware('auth:sanctum')->group(callback: function () {

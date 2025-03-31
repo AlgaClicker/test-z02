@@ -15,39 +15,13 @@ class AuthWebController extends Controller
         $this->accountService = $accountService;
     }
 
-    public function authLogin(Request $request)
-    {
-
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-
-
-
-
-        $account = $this->accountService->login(
-            $request->get('email'),
-            $request->get('password')
-        );
-
-        dd($account);
-
-    }
-
     public function authWebLoginGet(Request $request) {
-
-        if ($request->inertia()) {
-
-        }
         return Inertia::render('LoginPage', [
             'account' => auth()->user(),
         ]);
     }
     public function authWebLogin(Request $request)
     {
-
-
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
@@ -69,9 +43,24 @@ class AuthWebController extends Controller
         ]);
     }
 
+    public function appStartPage(Request $request)
+    {
+
+
+        return Inertia::render('AppStartPage',[
+            'account'=> $this->accountService->getMe()
+        ]);
+    }
     public function authWebLoginOut()
     {
        return Inertia::render('LoginOutPage');
+    }
+
+    function authRegisterGet()
+    {
+        return Inertia::render('RegistrationPage', [
+            'account' => null
+        ]);
     }
     function authRegister(Request $request)
     {

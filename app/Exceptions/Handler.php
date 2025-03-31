@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
+use Inertia\Inertia;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -39,13 +40,17 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception): Response
     {
-
+        $response = parent::render($request, $exception);
         if (!$exception->getCode() || $exception->getCode() === 0) {
             $code = 500;
         } else {
             $code = $exception->getCode();
         }
+
+
+
         if ($exception instanceof ValidationException ) {
+            return back()->with([]);
             return response()->json([
                 'success' => false,
                 'data'    => $exception->errors(),

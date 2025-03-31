@@ -73,7 +73,7 @@ import { router,usePage,Deferred, useRemember  } from '@inertiajs/vue3'
                     <div class="w-full h-px bg-[#E4E4E7]"></div>
                     <p class="text-[14px] leading-none text-[#111827]">
                         Нет аккаунта?
-                        <a href="/register" class="underline hover:text-[#FF6E4E]">Зарегистрироваться</a>
+                        <a href="/auth/register" class="underline hover:text-[#FF6E4E]">Зарегистрироваться</a>
                     </p>
                 </div>
             </div>
@@ -95,6 +95,8 @@ const form = reactive({
     email: 'test@test.local',
 })
 
+let token =  localStorage.getItem('auth_token')
+
 
 export default {
   props: {
@@ -106,6 +108,7 @@ export default {
   computed: {
   },
   mount() {
+
 
   },
   methods: {
