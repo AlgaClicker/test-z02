@@ -4,6 +4,7 @@ namespace Application\Services;
 
 use Application\Contracts\Repositories\CounteragentRepositoryContract;
 use Application\Contracts\Services\CounteragentServiceContract;
+use Application\Entities\Account;
 use MoveMoveIo\DaData\Facades\DaDataCompany;
 use MoveMoveIo\DaData\Enums\BranchType;
 use MoveMoveIo\DaData\Enums\CompanyType;
@@ -72,6 +73,10 @@ class CounteragentService implements  CounteragentServiceContract
     public function deleteMyCounteragents()
     {
         $account = $this->usersRepository->getById(auth()->id());
+        return $this->counteragentRepository->deleteAccountCounteragents($account);
+    }
+    public function deleteCounteragentsByAccount(Account $account)
+    {
         return $this->counteragentRepository->deleteAccountCounteragents($account);
     }
 }

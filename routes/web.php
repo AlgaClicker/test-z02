@@ -8,6 +8,7 @@ use App\Http\Controllers\Web\CounteragentWebController;
 use Inertia\Inertia;
 
 Route::get('/', [AuthWebController::class, 'appStartPage'])->middleware('auth:sanctum');
+Route::get('/home', [AuthWebController::class, 'appStartPage'])->middleware('auth:sanctum');
 Route::post('/', [AuthWebController::class, 'appStartPage'])->middleware('auth:sanctum');
 
 Route::post('/auth/login', [AuthWebController::class, 'authWebLogin'])->name('web-login');

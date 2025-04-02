@@ -14,7 +14,8 @@ install: composer npm artisan-install  ## Install Application
 
 
 run: ## Run service
-	php artisan serve
+	php artisan serve & \
+	npm run dev
 # Установка JavaScript-зависимостей через npm
 npm:
 	@echo "Устанавливаем JavaScript-зависимости через npm..."

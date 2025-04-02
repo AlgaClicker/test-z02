@@ -1,10 +1,5 @@
 <script setup>
 import Layout from '../Layout.vue'
-import { reactive } from 'vue'
-import { router,usePage,Deferred, useRemember  } from '@inertiajs/vue3'
-
-
-
 </script>
 <template>
     <Layout>
@@ -79,9 +74,10 @@ import { router,usePage,Deferred, useRemember  } from '@inertiajs/vue3'
 </template>
 
 <script>
+import {router, usePage, Deferred} from "@inertiajs/vue3";
+import { mapState, mapActions } from 'pinia'
+import { useAuthStore } from './../store/';
 
-import {router, usePage} from "@inertiajs/vue3";
-import {reactive, watch, ref,watchEffect} from "vue";
 import axios from 'axios'
 const page = usePage()
 
@@ -101,42 +97,30 @@ export default {
             }
         }
     },
-    created() {
-        let token = localStorage.getItem('auth_token');
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        if (token) {
-            axios({
-                method:'get',
-                url: "api/me",
-                baseURL: '/',
-            }).then(()=>{
-                router.get("/")
-            }).catch(error => {
-                axios.defaults.headers.common['Authorization']= ""
-                localStorage.setItem('auth_token',"")
-            });
-           //
+    async mounted() {
+        await this.checkAuth()
+        if (this.getIsAuth === true) {
+              router.get(this.getLastPage())
         }
-        console.log("created",localStorage.getItem('auth_token'))
+
 
     },
-    mount() {
-        console.log("mount login ")
+    created() {
 
+    },
+    computed: {
+        ...mapState(useAuthStore, ['getAccount','getIsAuth']),
     },
     methods: {
+        ...mapActions(useAuthStore, ['setToken','setAccount','checkAuth','getLastPage']),
       async submit()  {
           await router.post('/login', this.form, {
               // Используем onSuccess для обработки ответа
               onSuccess: (page) => {
-                  // Предполагается, что сервер возвращает токен в page.props.token
-                  const token = page.props.auth;
-                  if (token) {
-                      // Сохраняем токен в localStorage
-                      localStorage.setItem('auth_token', token);
-                      // Устанавливаем заголовок для Axios
-                      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-                      router.get("/")
+                  this.setToken(page.props.auth);
+                  this.setAccount(page.props.account)
+                  if (page.props.auth) {
+                      router.get("/home")
                   }
               },
               onError: (errors) => {
