@@ -1,10 +1,5 @@
 <script setup>
 import Layout from '../Layout.vue'
-import { reactive } from 'vue'
-import { router,usePage,Deferred, useRemember  } from '@inertiajs/vue3'
-
-
-
 </script>
 <template>
     <Layout>
@@ -79,11 +74,9 @@ import { router,usePage,Deferred, useRemember  } from '@inertiajs/vue3'
 </template>
 
 <script>
-
-import {router, usePage} from "@inertiajs/vue3";
-import {reactive, watch, ref,watchEffect} from "vue";
-import { useAuthStore } from './../store/';
+import {router, usePage, Deferred} from "@inertiajs/vue3";
 import { mapState, mapActions } from 'pinia'
+import { useAuthStore } from './../store/';
 
 import axios from 'axios'
 const page = usePage()
@@ -104,21 +97,22 @@ export default {
             }
         }
     },
-    mounted() {
-        ///let token = localStorage.getItem('auth_token');
-           // axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        console.log("route getIsAuth",this.getIsAuth)
-        if (this.getIsAuth) {
-            router.get('/home')
-
+    async mounted() {
+        await this.checkAuth()
+        if (this.getIsAuth === true) {
+              router.get(this.getLastPage())
         }
+
+
+    },
+    created() {
 
     },
     computed: {
         ...mapState(useAuthStore, ['getAccount','getIsAuth']),
     },
     methods: {
-        ...mapActions(useAuthStore, ['setToken','setAccount','checkAuth']),
+        ...mapActions(useAuthStore, ['setToken','setAccount','checkAuth','getLastPage']),
       async submit()  {
           await router.post('/login', this.form, {
               // Используем onSuccess для обработки ответа

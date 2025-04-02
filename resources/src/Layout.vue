@@ -26,7 +26,8 @@ import { Link } from '@inertiajs/vue3'
 
 <script>
 
-import {router} from "@inertiajs/vue3";
+
+import {router, usePage, Deferred} from "@inertiajs/vue3";
 import { useAuthStore } from './store/'
 import { mapState,mapActions } from 'pinia'
 
@@ -72,11 +73,17 @@ export default {
             ],
         }
     },
-    created() {
-        this.checkAuth()
+    mounted() {
+
+        this.setPage(usePage().url)
+    },
+    async created() {
+
+        await this.checkAuth()
+
     },
     methods: {
-        ...mapActions(useAuthStore,['checkAuth']),
+        ...mapActions(useAuthStore,['checkAuth','setPage']),
         loginout() {
             console.log("loginout")
             localStorage.setItem('auth_token',"")

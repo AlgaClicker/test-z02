@@ -9,7 +9,8 @@ export const useAuthStore = defineStore('auth', {
             email: "",
             full_name: ""
         },
-        token: ""
+        token: "",
+        lastPage:""
     }),
     getters: {
         getIsAuth (state)  {
@@ -19,6 +20,11 @@ export const useAuthStore = defineStore('auth', {
             return state.full_name
         },
         getAccount (state) {
+            return state.account
+        },
+        getPage (state) {
+            const page = localStorage.getItem('page');
+            state.lastPage()
             return state.account
         }
     },
@@ -33,26 +39,42 @@ export const useAuthStore = defineStore('auth', {
         setAccount(account) {
             this.account = account
         },
+
+        setPage(page) {
+
+            this.lastPage = page
+            if (page !== "/login") {
+                localStorage.setItem('page',page)
+            }
+
+        },
+
         loginOut() {
             localStorage.setItem('auth_token',"")
             this.isAuth = false
             this.token = null
         },
-        checkAuth()  {
+        getLastPage() {
+            let page = localStorage.getItem('page');
+            if (!page) {
+                page = "/"
+            }
+            return page
+        },
+        async checkAuth()  {
             const token =  localStorage.getItem('auth_token');
+            this.token = token
+
             if (token) {
                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-               this.account =  axios.get('/api/me').then(function (response) {
-                    return  response.data.data
-                }).catch(function (error) {
-                    console.log(error.message);
+               let account =  await axios.get('/api/me').then(function (response) {
+                   }).catch(function (error) {
+                      return false;
+                   })
 
-                   return false
-                })
-                if (this.account) {
-                    this.isAuth = true
-                } else {
-                    this.isAuth = false
+                if (account !== false) {
+                    this.setAccount(account)
+                    this.setToken(token)
                 }
             }
         }
