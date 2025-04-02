@@ -17,7 +17,6 @@ class AuthWebController extends Controller
 
     public function authWebLoginGet(Request $request) {
 
-
         return Inertia::render('LoginPage', [
             'account' => auth()->user(),
         ]);
@@ -48,11 +47,7 @@ class AuthWebController extends Controller
 
     public function appStartPage(Request $request)
     {
-
-
-        return Inertia::render('AppStartPage',[
-            'account'=> $this->accountService->getMe()
-        ]);
+        return Inertia::render('AppStartPage');
     }
     public function authWebLoginOut()
     {
@@ -67,8 +62,6 @@ class AuthWebController extends Controller
     }
     function authRegister(Request $request)
     {
-
-
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|string|min:4',

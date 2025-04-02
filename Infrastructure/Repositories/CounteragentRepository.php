@@ -30,8 +30,9 @@ final class CounteragentRepository extends AbstractRepository implements  Counte
     }
 
     public function deleteAccountCounteragents(Account $account)
-    {return parent::deleteAllBy(['user_id'=>$account->getId()]);
+    {
 
+        return parent::deleteAllBy(['user_id'=>$account->getId()]);
     }
 
 

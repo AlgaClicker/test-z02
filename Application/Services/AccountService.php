@@ -61,7 +61,6 @@ class AccountService implements AccountServiceContract
         return $account;
     }
 
-
     public function register(array $arrayKeyVal): ? Account
     {
         if ($this->getAccountFromEmail($arrayKeyVal['email']) !== null) {
@@ -83,16 +82,13 @@ class AccountService implements AccountServiceContract
 
     public function deleteMyAccount()
     {
-        $account_id = $this->getMe()->getId();
-        $this->counteragentService->deleteMyCounteragents();
-        $this->usersRepository->delete($account_id);
-
-        return $this->usersRepository->delete($account_id);
+        $account= $this->getMe();
+        $this->counteragentService->deleteCounteragentsByAccount($account);
+        $this->usersRepository->delete($account->getId());
     }
 
     public function checkToken(string $token): ? User
     {
-
         return null;
     }
 }

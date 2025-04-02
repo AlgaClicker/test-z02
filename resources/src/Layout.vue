@@ -1,7 +1,6 @@
 <script setup>
 import { Link } from '@inertiajs/vue3'
 </script>
-
 <template>
     <main>
         <header>
@@ -10,9 +9,7 @@ import { Link } from '@inertiajs/vue3'
                     <!-- Перебор пунктов меню -->
                     <li v-for="link in linksItems"  :key="link.name" class="menu-item">
                         <!-- Кнопка-триггер для показа выпадающего меню -->
-
-                        <Link :href="link.href" v-show="link.isAuth === isAuth">
-
+                        <Link :href="link.href" v-show="link.isAuth === getIsAuth">
                             <button v-show="!link.submit"   class="menu-trigger">  {{ link.text }} {{link.show }}</button>
                             <button  v-show="link.submit" @click="link.submit" class="menu-trigger">  {{ link.text }}</button>
                         </Link>
@@ -32,6 +29,9 @@ import { Link } from '@inertiajs/vue3'
 <script>
 
 import {router} from "@inertiajs/vue3";
+import { useAuthStore } from './store/'
+import { mapState,mapActions } from 'pinia'
+
 export default {
     components: {router},
     props: {
@@ -43,7 +43,7 @@ export default {
                 {
                     name: "home",
                     text:"Главная",
-                    href: '/',
+                    href: '/home',
                     isAuth: true
                 },
                 {
@@ -77,30 +77,25 @@ export default {
                     isAuth: true,
                     submit: this.loginout
                 },
-
-
-
             ],
         }
     },
-
+    created() {
+        this.checkAuth()
+    },
     methods: {
+        ...mapActions(useAuthStore,['checkAuth']),
         loginout() {
             console.log("loginout")
             localStorage.setItem('auth_token',"")
             router.get("/")
         },
-        toggleDropdown(item) {
-            // Закрываем все открытые меню, если нужно (опционально)
 
-            // Переключаем текущее меню
-            item.showDropdown = !item.showDropdown;
-        },
     },
     computed: {
-        isAuth: () =>  {
-            console.log("isauth",localStorage.getItem('auth_token') ? true : false)
-            return localStorage.getItem('auth_token') ? true : false
+        ...mapState(useAuthStore,['getIsAuth','getAccount']),
+        isAuth() {
+            return this.getIsAuth;
         }
     },
 

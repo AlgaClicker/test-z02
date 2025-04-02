@@ -16,6 +16,7 @@ export default defineConfig({
                 'resources/js/app.js',
                 'resources/src/App.vue',
                 'resources/src/Layout.vue',
+                'resources/js/store/index.js',
                 ...componentFiles,
             ],
 
