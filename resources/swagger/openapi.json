@@ -1,0 +1,242 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Test-Z02 API",
+        "version": "1.0.0",
+        "description": "Документация REST API для проекта Test-Z02. Включает авторизацию, управление пользователями и работу с контрагентами.",
+        "contact": {
+            "name": "Sergey Zh",
+            "email": "it59com@mail.ru"
+        }
+    },
+    "paths": {
+        "/auth/login": {
+            "post": {
+                "summary": "Авторизация",
+                "tags": ["Auth"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": { "type": "string" },
+                                    "password": { "type": "string" }
+                                },
+                                "required": ["email", "password"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Успешная авторизация",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": { "type": "boolean" },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": { "type": "string" },
+                                                "email": { "type": "string" },
+                                                "full_name": { "type": "string" },
+                                                "token": { "type": "string" }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
+                }
+            }
+        },
+        "/api/register": {
+            "post": {
+                "summary": "Регистрация",
+                "tags": ["Auth"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": { "type": "string" },
+                                    "password": { "type": "string" },
+                                    "password_confirm": { "type": "string" },
+                                    "full_name": { "type": "string" }
+                                },
+                                "required": ["email", "password", "password_confirm", "full_name"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Успешная регистрация",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": { "type": "boolean" },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": { "type": "string" },
+                                                "email": { "type": "string" },
+                                                "full_name": { "type": "string" }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/me": {
+            "get": {
+                "summary": "Получить текущего пользователя",
+                "tags": ["Auth"],
+                "security": [{ "bearerAuth": [] }],
+                "responses": {
+                    "200": {
+                        "description": "Информация о текущем пользователе",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": { "type": "boolean" },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": { "type": "string" },
+                                                "email": { "type": "string" },
+                                                "full_name": { "type": "string" }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+        },
+        "/api/account/delete": {
+            "get": {
+                "summary": "Удалить текущий аккаунт",
+                "tags": ["Auth"],
+                "security": [{ "bearerAuth": [] }],
+                "responses": {
+                    "200": {
+                        "description": "Аккаунт удалён"
+                    }
+                }
+            }
+        },
+        "/api/counteragent/add/inn/": {
+            "post": {
+                "summary": "Добавить контрагента по ИНН",
+                "tags": ["Counteragent"],
+                "security": [{ "bearerAuth": [] }],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "inn": { "type": "string" }
+                                },
+                                "required": ["inn"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Контрагент добавлен",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": { "type": "boolean" },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": { "type": "string" },
+                                                "inn": { "type": "string" },
+                                                "name": { "type": "string" },
+                                                "ogrn": { "type": "string" },
+                                                "address": { "type": "string" }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+        },
+        "/api/counteragents": {
+            "get": {
+                "summary": "Список контрагентов",
+                "tags": ["Counteragent"],
+                "security": [{ "bearerAuth": [] }],
+                "responses": {
+                    "200": {
+                        "description": "Список контрагентов",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": { "type": "boolean" },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": { "type": "string" },
+                                                    "inn": { "type": "string" },
+                                                    "name": { "type": "string" },
+                                                    "ogrn": { "type": "string" },
+                                                    "address": { "type": "string" }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}
