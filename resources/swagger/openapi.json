@@ -20,6 +20,7 @@
                         "application/json": {
                             "schema": {
                                 "type": "object",
+
                                 "properties": {
                                     "email": { "type": "string" },
                                     "password": { "type": "string" }
@@ -73,7 +74,7 @@
                                     "password_confirm": { "type": "string" },
                                     "full_name": { "type": "string" }
                                 },
-                                "required": ["email", "password", "password_confirm", "full_name"]
+                                "required": ["email", "password", "password_confirm"]
                             }
                         }
                     }
