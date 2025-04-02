@@ -13,8 +13,6 @@ import { Link } from '@inertiajs/vue3'
                             <button v-show="!link.submit"   class="menu-trigger">  {{ link.text }} {{link.show }}</button>
                             <button  v-show="link.submit" @click="link.submit" class="menu-trigger">  {{ link.text }}</button>
                         </Link>
-
-                        <!-- Выпадающее меню (если оно открыто) -->
                     </li>
                 </ul>
             </nav>
@@ -63,12 +61,6 @@ export default {
                     text:"Инфо PHP",
                     href: '/info',
                     isAuth: true
-                },
-                {
-                    name: "login",
-                    text:"Вход",
-                    href: '/login',
-                    isAuth: false
                 },
                 {
                     name: "loginout",
