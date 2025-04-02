@@ -11,7 +11,8 @@
         "laravel/framework": "^11.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
-        "movemoveapp/laravel-dadata": "^1.0"
+        "movemoveapp/laravel-dadata": "^1.0",
+        "nextapps/laravel-swagger-ui": "^1.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
