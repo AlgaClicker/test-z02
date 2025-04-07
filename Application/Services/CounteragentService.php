@@ -42,7 +42,7 @@ class CounteragentService implements  CounteragentServiceContract
             "name"=> $dadata['name']['short_with_opf'],
             "ogrn" => $dadata['ogrn'],
             "address" => $dadata['address']['unrestricted_value'],
-            "user_id" => auth()->id()
+            "user_id" => $this->getCurrentAccount()
         ];
 
         return $this->counteragentRepository->create($data);
@@ -51,12 +51,12 @@ class CounteragentService implements  CounteragentServiceContract
     public function getByInn($inn) {
         return $this->counteragentRepository->findBy([
             'inn'=>$inn,
-            'user_id'=>auth()->id()
+            'user_id'=>$this->getCurrentAccount()
         ]);
     }
     public function getCounteragentById($id)
     {
-        return $this->counteragentRepository->getAccountCounteragent($id,auth()->id());
+        return $this->counteragentRepository->getAccountCounteragent($id,$this->getCurrentAccount());
     }
 
     public function deleteCounteragents()
@@ -67,7 +67,7 @@ class CounteragentService implements  CounteragentServiceContract
     public function getMyCounteragents()
     {
 
-        $account = $this->usersRepository->getById(auth()->id());
+        $account = $this->getCurrentAccount();
         return $this->counteragentRepository->getAccountCounteragents($account);
     }
     public function deleteMyCounteragents()
@@ -79,4 +79,9 @@ class CounteragentService implements  CounteragentServiceContract
     {
         return $this->counteragentRepository->deleteAccountCounteragents($account);
     }
+
+    private function getCurrentAccount(): Account
+{
+    return $this->usersRepository->getById(auth()->id());
+}
 }

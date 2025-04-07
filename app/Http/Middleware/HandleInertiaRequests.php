@@ -59,13 +59,10 @@ class HandleInertiaRequests extends Middleware
     }
     protected function redirectTo($request)
     {
-        // Если запрос ожидает JSON (API или Inertia)
         if ($request->expectsJson()) {
-            // Можно вернуть ошибку, чтобы не было редиректа
             abort(401, 'Unauthenticated');
         }
 
-        // Иначе отправляем на страницу логина (или другую, по желанию)
-        return route('login');
+        //return route('login');
     }
 }

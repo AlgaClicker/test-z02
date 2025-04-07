@@ -18,7 +18,6 @@ class UsersRepository extends AbstractRepository implements UsersRepositoryContr
          $this->user = $user;
      }
 
-
     public function register(array $arrayKeyVal)
     {
         $arrayKeyVal['password'] = Hash::make($arrayKeyVal['password']);
@@ -44,10 +43,10 @@ class UsersRepository extends AbstractRepository implements UsersRepositoryContr
 
     public function getById(string $id): ?Account
     {
-
         $account = $this->findById($id);
         return $this->setName($account);
     }
+
     public function getUserByEmail(string $email): ?Account
     {
         $account = parent::findBy(["email"=>$email]);
@@ -61,14 +60,11 @@ class UsersRepository extends AbstractRepository implements UsersRepositoryContr
         $this->setModel($user);
         $user = $this->user->find($account->getId());
         $password_hash = $user->password;
-        //$account = $this->findById($user->id);
-        if (! $account || ! $user || ! Hash::check($password, $password_hash)) {
-            return null;
-        }
-
+            if (! $account || ! $user || ! Hash::check($password, $password_hash)) {
+                return null;
+            }
         return $user;
     }
-
 
     public function setName(Account $account): Account
     {

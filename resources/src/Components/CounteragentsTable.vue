@@ -59,6 +59,7 @@
 
 <script>
 export default {
+    name: "counteragents-table",
     props: {
         counteragents: Object,
         errors: Object,

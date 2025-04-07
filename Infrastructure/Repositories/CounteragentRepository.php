@@ -1,5 +1,6 @@
 <?php
 namespace Infrastructure\Repositories;
+
 use Application\Contracts\Repositories\CounteragentRepositoryContract;
 use App\Models\Counteragent as CounteragentModel;
 use Application\Entities\Account;
@@ -24,17 +25,11 @@ final class CounteragentRepository extends AbstractRepository implements  Counte
     }
     public function getAccountCounteragents(Account $account): array | null
     {
-
-
         return parent::findAllBy(['user_id'=>$account->getId()]);
     }
 
     public function deleteAccountCounteragents(Account $account)
     {
-
         return parent::deleteAllBy(['user_id'=>$account->getId()]);
     }
-
-
-
 }

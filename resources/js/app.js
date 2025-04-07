@@ -20,10 +20,12 @@ void createInertiaApp({
         return pages[`../src/Pages/${name}.vue`]
     },
     setup({ el, App, props, plugin }) {
+
         const pinia = createPinia()
         createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(pinia)
+
             .mount(el)
     },
 });

@@ -1,27 +1,30 @@
 <script setup>
 import Layout from '../Layout.vue'
-import Table from '../Components/TabCounteragentCoponenet.vue'
+import CounteragentsTable from '@/Components/CounteragentsTable.vue'
+import { Head, router, usePage } from '@inertiajs/vue3'
+
+//console.log(import.meta.resolve('@'));
+
+
 </script>
 
 
 <template>
     <Layout>
-
-
+        <Head title="Контрагенты" />
 
 
         <div class="rounded-lg m-5 shadow-sm border bg-white overflow-hidden">
             <!-- Заголовок карточки -->
             <div class="px-4 py-3 border-b flex items-center justify-between">
-                <h2 class="text-lg font-semibold">Контаргенты</h2>
+                <h2 class="text-lg font-semibold">Добавленные контрагенты</h2>
                     <button @click="openModal" class="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition">
                         Добавить контрагента
                     </button>
             </div>
             <!-- Содержимое карточки -->
             <div class="px-4 py-3 overflow-x-auto">
-
-                    <Table :counteragents="counteragents"></Table>
+                    <CounteragentsTable :counteragents="counteragents"></CounteragentsTable>
             </div>
             <!-- Футер карточки с действием -->
             <div class="px-4 py-3 border-t flex justify-end">
